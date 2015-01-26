@@ -5,7 +5,43 @@ require 'pry'
 
 module Toodoo
   class User < ActiveRecord::Base
+  has_many :lists
   end
+
+  class List < ActiveRecord::Base
+  belongs_to :user
+  has_many :todoitems
+  end
+
+  class Todoitem < ActiveRecord::Base
+  belongs_to :list
+  end
+
+  class Create_Users < ActiveRecord::Migration V 1.0
+    def self.up
+      create_table User.table_name do |t|
+        t.string :name
+        t.timestamps
+      end
+
+      create_table List.table_name do |t|
+        t.belongs_to :user, index:true
+        t.string :title
+        t.datetime :create_date
+      end
+
+      create_table Todoitem.table_name do |t|
+        t.belongs_to :list, index:true
+        t.text :item
+        t.datetime :due
+      end
+    end
+
+    def self.down
+      drop_table User.table_name
+      drop_table List.table_name
+      drop_table Todoitem.table_name
+    end
 end
 
 class TooDooApp
